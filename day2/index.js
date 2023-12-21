@@ -55,3 +55,5 @@ function day2part1(games) {
 
 console.log(day2part1(example));
 console.log(day2part1(input));
+
+function day2part2(games) {}
