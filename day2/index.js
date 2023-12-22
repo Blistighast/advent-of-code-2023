@@ -53,7 +53,46 @@ function day2part1(games) {
   return possibleGames.reduce((a, b) => a + b);
 }
 
-console.log(day2part1(example));
-console.log(day2part1(input));
+// console.log(day2part1(example));
+// console.log(day2part1(input));
 
-function day2part2(games) {}
+function day2part2(games) {
+  const gameList = {};
+  const gamePowerList = [];
+
+  //format games list into object
+  for (let game of games) {
+    const gameFormatter = game.split(":");
+    gameList[gameFormatter[0].replace(/Game\s/, "")] = gameFormatter[1]
+      .trim()
+      .split("; ");
+  }
+
+  //go through game rounds and get highest total of each color
+  for (let game in gameList) {
+    const gameCubeTotals = { red: 0, blue: 0, green: 0 };
+    const gameCubeNumbers = [];
+    for (let round of gameList[game]) {
+      const currentRed = parseInt(/(\d*)\sred/.exec(round)?.at(1));
+      const currentBlue = parseInt(/(\d*)\sblue/.exec(round)?.at(1));
+      const currentGreen = parseInt(/(\d*)\sgreen/.exec(round)?.at(1));
+      if (currentRed > gameCubeTotals.red) gameCubeTotals.red = currentRed;
+      if (currentBlue > gameCubeTotals.blue) gameCubeTotals.blue = currentBlue;
+      if (currentGreen > gameCubeTotals.green)
+        gameCubeTotals.green = currentGreen;
+    }
+    gameList[game] = gameCubeTotals;
+
+    //get numbers from totals and multiply together to get power
+    for (let color in gameList[game]) {
+      gameCubeNumbers.push(gameList[game][color]);
+    }
+    gamePowerList.push(gameCubeNumbers.reduce((a, b) => a * b));
+  }
+
+  //add powers together
+  return gamePowerList.reduce((a, b) => a + b);
+}
+
+console.log(day2part2(example));
+console.log(day2part2(input));
