@@ -13,6 +13,7 @@ const input = readFileSync("input.txt", { encoding: "utf-8" })
 function day3part1(schematic) {
   const partNumbers = [];
 
+  //go through schematic
   for (const [i, line] of schematic.entries()) {
     const lineNumbers = [];
     const prevLineSymbols = [];
@@ -83,5 +84,78 @@ function day3part1(schematic) {
   return partNumbers.reduce((a, b) => parseInt(a) + parseInt(b));
 }
 
-console.log(day3part1(example));
-console.log(day3part1(input));
+// console.log(day3part1(example));
+// console.log(day3part1(input));
+
+function day3part2(schematic) {
+  const gearRatios = [];
+  const gearCheckHash = {}; //how many numbers does * touch
+
+  //go through schematic
+  for (const [i, line] of schematic.entries()) {
+    const symbolsIndexLine = [];
+    const prevLineNumbers = [];
+    const nextLineNumbers = [];
+    const symbolRegex = /\*/g;
+    const numberRegex = /\d+/g;
+
+    //grab "*" symbols
+    while ((symbolLine = symbolRegex.exec(line)) !== null) {
+      symbolsIndexLine.push(symbolLine.index);
+    }
+
+    //grab numbers
+    while ((numberLine = numberRegex.exec(schematic[i - 1])) !== null) {
+      prevLineNumbers.push(numberLine);
+    }
+    while ((numberLine = numberRegex.exec(schematic[i + 1])) !== null) {
+      nextLineNumbers.push(numberLine);
+    }
+
+    // console.log(symbolsIndexLine);
+    console.log(prevLineNumbers);
+
+    for (let symbol of symbolsIndexLine) {
+      //check if number around symbol, add to hash
+      //before
+      if (line[symbol - 1]?.match(numberRegex)) {
+        gearCheckHash[`${i}, ${symbol}`]
+          ? (gearCheckHash[`${i}, ${symbol}`] = {
+              count: (gearCheckHash[`${i}, ${symbol}`].count += 1),
+              ratio:
+                gearCheckHash[`${i}, ${symbol}`].ratio *
+                line.slice(symbol - 3, symbol).match(numberRegex),
+            })
+          : (gearCheckHash[`${i}, ${symbol}`] = {
+              count: 1,
+              ratio: parseInt(
+                line.slice(symbol - 3, symbol).match(numberRegex)[0] //if errors check this first, can grab the wrong number if they are too close
+              ),
+            });
+      }
+      //after
+      if (line[symbol + 1]?.match(numberRegex)) {
+        gearCheckHash[`${i}, ${symbol}`]
+          ? (gearCheckHash[`${i}, ${symbol}`] = {
+              count: (gearCheckHash[`${i}, ${symbol}`].count += 1),
+              ratio:
+                gearCheckHash[`${i}, ${symbol}`].ratio *
+                line.slice(symbol + 1).match(numberRegex),
+            })
+          : (gearCheckHash[`${i}, ${symbol}`] = {
+              count: 1,
+              ratio: line.slice(symbol + 1).match(numberRegex),
+            });
+      }
+      //line before
+      //can have 2 numbers that touch on same past line
+      //if no index of prev line numbers are = to index of symbol, need to check if 2 numbers touch, if 1 number is directly over it, it can only be that one number
+    }
+  }
+  // console.log(gearCheckHash);
+
+  //sum up gearRatios and return
+  return gearCheckHash;
+}
+
+console.log(day3part2(example));
