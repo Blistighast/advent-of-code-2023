@@ -92,7 +92,7 @@ function day3part2(schematic) {
   const gearCheckHash = {}; //how many numbers does * touch
 
   //go through schematic
-  for (const [i, line] of schematic.entries()) {
+  for (const [lineIndex, line] of schematic.entries()) {
     const symbolsIndexLine = [];
     const prevLineNumbers = [];
     const nextLineNumbers = [];
@@ -105,46 +105,70 @@ function day3part2(schematic) {
     }
 
     //grab numbers
-    while ((numberLine = numberRegex.exec(schematic[i - 1])) !== null) {
+    while ((numberLine = numberRegex.exec(schematic[lineIndex - 1])) !== null) {
       prevLineNumbers.push(numberLine);
     }
-    while ((numberLine = numberRegex.exec(schematic[i + 1])) !== null) {
+    while ((numberLine = numberRegex.exec(schematic[lineIndex + 1])) !== null) {
       nextLineNumbers.push(numberLine);
     }
 
     // console.log(symbolsIndexLine);
-    console.log(prevLineNumbers);
+    // console.log(prevLineNumbers);
 
-    for (let symbol of symbolsIndexLine) {
+    for (const [symbolIndex, symbol] of symbolsIndexLine.entries()) {
       //check if number around symbol, add to hash
       //before
       if (line[symbol - 1]?.match(numberRegex)) {
-        gearCheckHash[`${i}, ${symbol}`]
-          ? (gearCheckHash[`${i}, ${symbol}`] = {
-              count: (gearCheckHash[`${i}, ${symbol}`].count += 1),
-              ratio:
-                gearCheckHash[`${i}, ${symbol}`].ratio *
-                line.slice(symbol - 3, symbol).match(numberRegex),
+        gearCheckHash[`${lineIndex}, ${symbol}`]
+          ? (gearCheckHash[`${lineIndex}, ${symbol}`] = {
+              count: (gearCheckHash[`${lineIndex}, ${symbol}`].count += 1),
+              parts: [
+                ...parts,
+                line
+                  .slice(symbolsIndexLine[symbolIndex - 1], symbol + 1)
+                  .match(/\d+(?=\*)/)[0],
+              ],
+              // ratio:
+              //   gearCheckHash[`${i}, ${symbol}`].ratio *
+              //   line.slice(symbol - 3, symbol).match(numberRegex),
             })
-          : (gearCheckHash[`${i}, ${symbol}`] = {
+          : (gearCheckHash[`${lineIndex}, ${symbol}`] = {
               count: 1,
-              ratio: parseInt(
-                line.slice(symbol - 3, symbol).match(numberRegex)[0] //if errors check this first, can grab the wrong number if they are too close
-              ),
+              parts: [
+                parseInt(
+                  line
+                    .slice(symbolsIndexLine[symbolIndex - 1], symbol + 1)
+                    .match(/\d+(?=\*)/)[0]
+                ),
+              ],
+              // ratio: parseInt(
+              //   // line.slice(0, symbol + 1).match(numberRegex)[0] //if errors check this first, can grab the wrong number if they are too close
+              //   line.slice(0, symbol + 1).match(/\d+(?=\*)/)[0] //if errors check this first, can grab the wrong number if they are too close
+              // ),
             });
       }
       //after
       if (line[symbol + 1]?.match(numberRegex)) {
-        gearCheckHash[`${i}, ${symbol}`]
-          ? (gearCheckHash[`${i}, ${symbol}`] = {
-              count: (gearCheckHash[`${i}, ${symbol}`].count += 1),
-              ratio:
-                gearCheckHash[`${i}, ${symbol}`].ratio *
-                line.slice(symbol + 1).match(numberRegex),
+        gearCheckHash[`${lineIndex}, ${symbol}`]
+          ? (gearCheckHash[`${lineIndex}, ${symbol}`] = {
+              count: (gearCheckHash[`${lineIndex}, ${symbol}`].count += 1),
+              parts: [
+                ...gearCheckHash[`${lineIndex}, ${symbol}`].parts,
+                parseInt(line.slice(symbol).match(numberRegex)[0]),
+              ],
+              // ratio: [
+              //   gearCheckHash[`${i}, ${symbol}`].ratio,
+              //   line.slice(symbol + 1).match(numberRegex)[0],
+              // ],
+              // ratio:
+              //   gearCheckHash[`${i}, ${symbol}`].ratio *
+              //   parseInt(line.slice(symbol + 1).match(/(?<=\*)\d+/)),
+              // parseInt(line.slice(symbol + 1).match(/(?<=\*)\d+/)),
             })
-          : (gearCheckHash[`${i}, ${symbol}`] = {
+          : (gearCheckHash[`${lineIndex}, ${symbol}`] = {
               count: 1,
-              ratio: line.slice(symbol + 1).match(numberRegex),
+              parts: [parseInt(line.slice(symbol + 1).match(numberRegex)[0])],
+              // ratio: line.slice(symbol + 1).match(numberRegex),
             });
       }
       //line before
