@@ -172,6 +172,11 @@ function day3part2(schematic) {
             });
       }
       //line before
+      if (schematic[lineIndex - 1][symbol].match(/\d/)) {
+        console.log(
+          schematic[lineIndex - 1].slice(symbol - 2, symbol + 2).match(/\d+/)
+        );
+      }
       //can have 2 numbers that touch on same past line
       //if no index of prev line numbers are = to index of symbol, need to check if 2 numbers touch, if 1 number is directly over it, it can only be that one number
     }
