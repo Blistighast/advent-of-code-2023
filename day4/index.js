@@ -56,17 +56,20 @@ function day4part1(cards) {
 // console.log(day4part1(example));
 // console.log(day4part1(input));
 
-function day4part2(cards, cardCount) {
-  const card = cards[cardCount];
-  // console.log(cards[cardCount]);
+function day4part2(cards) {
+  let totalCards = 0;
+  const allCards = {};
 
-  while (cards[cardCount]) {
+  for (const card of cards) {
     let amountWon = 0;
+    //grab card name
+    const cardName = card?.match(/Card\s+(\d+)\:/)[1];
+
     //grab winning numbers
     const winningNumbers = card
       .slice(/\:/.exec(card).index + 1, /\|/.exec(card).index)
       .trim()
-      .split(" ");
+      .split(/\s+/g);
 
     //grab player numbers
     const playedNumbers = card
@@ -74,25 +77,41 @@ function day4part2(cards, cardCount) {
       .trim()
       .split(/\s+/g);
 
-    // console.log(
-    //   "card Count",
-    //   cardCount,
-    //   "winning numbers:",
-    //   winningNumbers,
-    //   "played numbers",
-    //   playedNumbers
-    // );
-
     //check which player numbers are winners
     for (let num of playedNumbers) {
       if (winningNumbers.includes(num)) {
         amountWon += 1;
       }
     }
-    console.log("amount Won", amountWon);
-    day4part2(cards, (cardCount += 1));
+
+    //create card info with amounts
+    allCards[cardName]
+      ? (allCards[cardName] = {
+          totalWins: amountWon,
+          cardAmount: (allCards[cardName].cardAmount += 1),
+        })
+      : (allCards[cardName] = { totalWins: amountWon, cardAmount: 1 });
+
+    //add winning cards to their respective card
+    if (amountWon) {
+      for (let i = 1; i <= amountWon; i++) {
+        allCards[parseInt(cardName) + i]
+          ? (allCards[parseInt(cardName) + i] = {
+              cardAmount: (allCards[parseInt(cardName) + i].cardAmount +=
+                allCards[cardName].cardAmount),
+            })
+          : (allCards[parseInt(cardName) + i] = { cardAmount: 1 });
+      }
+    }
   }
-  return cardCount;
+
+  for (let card in allCards) {
+    totalCards = totalCards += allCards[card].cardAmount;
+  }
+
+  // console.log(allCards);
+  return totalCards;
 }
 
-console.log(day4part2(example, 0));
+console.log(day4part2(example));
+console.log(day4part2(input));
