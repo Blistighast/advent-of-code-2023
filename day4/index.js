@@ -53,7 +53,46 @@ function day4part1(cards) {
   return cardPoints.reduce((a, b) => a + b);
 }
 
-console.log(day4part1(example));
-console.log(day4part1(input));
+// console.log(day4part1(example));
+// console.log(day4part1(input));
 
-function day4part2(cards) {}
+function day4part2(cards, cardCount) {
+  const card = cards[cardCount];
+  // console.log(cards[cardCount]);
+
+  while (cards[cardCount]) {
+    let amountWon = 0;
+    //grab winning numbers
+    const winningNumbers = card
+      .slice(/\:/.exec(card).index + 1, /\|/.exec(card).index)
+      .trim()
+      .split(" ");
+
+    //grab player numbers
+    const playedNumbers = card
+      .slice(/\|/.exec(card).index + 1)
+      .trim()
+      .split(/\s+/g);
+
+    // console.log(
+    //   "card Count",
+    //   cardCount,
+    //   "winning numbers:",
+    //   winningNumbers,
+    //   "played numbers",
+    //   playedNumbers
+    // );
+
+    //check which player numbers are winners
+    for (let num of playedNumbers) {
+      if (winningNumbers.includes(num)) {
+        amountWon += 1;
+      }
+    }
+    console.log("amount Won", amountWon);
+    day4part2(cards, (cardCount += 1));
+  }
+  return cardCount;
+}
+
+console.log(day4part2(example, 0));
