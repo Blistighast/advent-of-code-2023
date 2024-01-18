@@ -13,6 +13,7 @@ const input = readFileSync("input.txt", { encoding: "utf-8" })
 function inputFormatter(input) {
   const almanacMap = {};
 
+  const label = input.match(/seeds:/);
   return almanacMap;
 }
 
