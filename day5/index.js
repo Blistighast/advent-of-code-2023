@@ -33,6 +33,30 @@ function inputFormatter(input) {
       .exec(input)[0]
       .split("\n")
       .map((line) => line.split(" "));
+  almanacMap.water =
+    /(?<=fertilizer-to-water map:\n)[\S\s]*(?=\n\nwater-to-light map:)/g
+      .exec(input)[0]
+      .split("\n")
+      .map((line) => line.split(" "));
+  almanacMap.light =
+    /(?<=water-to-light map:\n)[\S\s]*(?=\n\nlight-to-temperature map:)/g
+      .exec(input)[0]
+      .split("\n")
+      .map((line) => line.split(" "));
+  almanacMap.temperature =
+    /(?<=light-to-temperature map:\n)[\S\s]*(?=\n\ntemperature-to-humidity map:)/g
+      .exec(input)[0]
+      .split("\n")
+      .map((line) => line.split(" "));
+  almanacMap.humidity =
+    /(?<=temperature-to-humidity map:\n)[\S\s]*(?=\n\nhumidity-to-location map:)/g
+      .exec(input)[0]
+      .split("\n")
+      .map((line) => line.split(" "));
+  almanacMap.location = /(?<=humidity-to-location map:\n)[\S\s]*/g
+    .exec(input)[0]
+    .split("\n")
+    .map((line) => line.split(" "));
 
   return almanacMap;
 }
