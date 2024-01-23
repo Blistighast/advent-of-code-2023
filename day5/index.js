@@ -10,17 +10,18 @@ const input = readFileSync("input.txt", { encoding: "utf-8" })
   .trim(); // remove white space at beginning and end
 // .split("\n"); //split text into array of each line
 
+function day5part1(almanac) {
+  const formattedAlmanac = inputFormatter(almanac);
+
+  console.log(formattedAlmanac);
+  // return almanac;
+}
+
+console.log(day5part1(example));
+// console.log(day5part1(input));
+
 function inputFormatter(input) {
   const almanacMap = {};
-  const infoList = [
-    ["seed-to-soil map:", "soil-to-fertilizer map:"],
-    ["soil-to-fertilizer map:", "fertilizer-to-water map:"],
-    ["fertilizer-to-water map:", "water-to-light map:"],
-    ["water-to-light map:", "light-to-temperature map:"],
-    ["light-to-temperature map:", "temperature-to-humidity map:"],
-    ["temperature-to-humidity map:", "humidity-to-location map:"],
-    ["humidity-to-location map:"],
-  ];
 
   almanacMap.seeds = /(?<=seeds:\s*)((\d+\s*)+)\n\n/.exec(input)[1].split(" ");
   almanacMap.soil =
@@ -60,13 +61,3 @@ function inputFormatter(input) {
 
   return almanacMap;
 }
-
-function day5part1(almanac) {
-  const formattedAlmanac = inputFormatter(almanac);
-
-  console.log(formattedAlmanac);
-  // return almanac;
-}
-
-console.log(day5part1(example));
-// console.log(day5part1(input));
