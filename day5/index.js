@@ -61,3 +61,8 @@ function inputFormatter(input) {
 
   return almanacMap;
 }
+
+function day5part2(alamanac) {}
+
+// console.log(day5part2(example))
+// console.log(day5part2(input))
