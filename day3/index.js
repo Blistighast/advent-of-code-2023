@@ -141,10 +141,6 @@ function day3part2(schematic) {
                     .match(/\d+(?=\*)/)[0]
                 ),
               ],
-              // ratio: parseInt(
-              //   // line.slice(0, symbol + 1).match(numberRegex)[0] //if errors check this first, can grab the wrong number if they are too close
-              //   line.slice(0, symbol + 1).match(/\d+(?=\*)/)[0] //if errors check this first, can grab the wrong number if they are too close
-              // ),
             });
       }
       //after
@@ -156,14 +152,6 @@ function day3part2(schematic) {
                 ...gearCheckHash[`${lineIndex}, ${symbol}`].parts,
                 parseInt(line.slice(symbol).match(numberRegex)[0]),
               ],
-              // ratio: [
-              //   gearCheckHash[`${i}, ${symbol}`].ratio,
-              //   line.slice(symbol + 1).match(numberRegex)[0],
-              // ],
-              // ratio:
-              //   gearCheckHash[`${i}, ${symbol}`].ratio *
-              //   parseInt(line.slice(symbol + 1).match(/(?<=\*)\d+/)),
-              // parseInt(line.slice(symbol + 1).match(/(?<=\*)\d+/)),
             })
           : (gearCheckHash[`${lineIndex}, ${symbol}`] = {
               count: 1,

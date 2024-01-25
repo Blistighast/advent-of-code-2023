@@ -38,15 +38,6 @@ function day4part1(cards) {
 
     //save points
     cardPoints.push(winningPoints);
-
-    // console.log(
-    //   "winning numbers:",
-    //   winningNumbers,
-    //   "played numbers",
-    //   playedNumbers,
-    //   "points",
-    //   winningPoints
-    // );
   }
 
   //add up total points
